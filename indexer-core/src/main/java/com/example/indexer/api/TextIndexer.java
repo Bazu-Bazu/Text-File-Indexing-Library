@@ -5,8 +5,8 @@ import java.util.Set;
 
 public interface TextIndexer {
 
-    void addFile(Path file);
-    void addDirectory(Path dir);
+    boolean addFile(Path file);
+    boolean addDirectory(Path dir);
     Set<Path> search(String word);
     void start();
     void stop();

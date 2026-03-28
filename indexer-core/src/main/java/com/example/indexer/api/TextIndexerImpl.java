@@ -38,9 +38,9 @@ public class TextIndexerImpl implements TextIndexer {
     }
 
     @Override
-    public void addFile(Path file) {
+    public boolean addFile(Path file) {
         if (file == null || !Files.isRegularFile(file)) {
-            return;
+            return false;
         }
 
         executor.submit(() -> {
@@ -50,11 +50,15 @@ public class TextIndexerImpl implements TextIndexer {
                 System.err.println("Failed to index file: " + file + " " + e.getMessage());
             }
         });
+
+        return true;
     }
 
     @Override
-    public void addDirectory(Path dir) {
-        if (dir == null || !Files.isDirectory(dir)) return;
+    public boolean addDirectory(Path dir) {
+        if (dir == null || !Files.isDirectory(dir)) {
+            return false;
+        }
 
         try (var stream = Files.walk(dir)) {
             stream
@@ -65,6 +69,8 @@ public class TextIndexerImpl implements TextIndexer {
         }
 
         fileWatcher.registerRecursive(dir);
+
+        return true;
     }
 
     @Override
